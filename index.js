@@ -5,7 +5,7 @@ const fs = require('fs')
 const nunjucks = require('nunjucks')
 const extend = require('extend-shallow')
 
-exports.name = 'nunjucks-compat'
+exports.name = 'nunjucks-node'
 exports.inputFormats = ['njk', 'nunjucks', 'twig']
 exports.outputFormat = 'html'
 

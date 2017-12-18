@@ -1,6 +1,6 @@
 {
   "name": "jstransformer-nunjucks-node",
-  "version": "0.5.0",
+  "version": "0.1.0",
   "description": "Nunjucks (in Node) support for JSTransformers",
   "dependencies": {
     "extend-shallow": "^2.0.1",
@@ -14,7 +14,6 @@
     "index.js"
   ],
   "devDependencies": {
-    "testing-dep": "1.0.0",
     "test-jstransformer": "^1.0.0",
     "xo": "*"
   },
