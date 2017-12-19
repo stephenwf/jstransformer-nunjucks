@@ -49,14 +49,16 @@ exports.compile = function (str, options) {
 
   // Find the path for which the environment will be created.
   const envpath = opts.root || opts.path || (opts.filename ? path.dirname(opts.filename) : null)
-  const loaders = [new NodeLoader()]
   const paths = [process.cwd()]
 
   if (envpath) {
     paths.push(envpath)
   }
 
-  loaders.push(new nunjucks.FileSystemLoader(paths))
+  const loaders = [
+    new NodeLoader(paths),
+    new nunjucks.FileSystemLoader(paths)
+  ]
 
   const env = new nunjucks.Environment(loaders, opts)
 
