@@ -13,12 +13,27 @@ nunjucks.installJinjaCompat()
 
 const NodeLoader = nunjucks.FileSystemLoader.extend({
   getSource(name) {
-    let fullpath
-    try {
-      fullpath = require.resolve(name)
-    } catch (err) {
-      return nunjucks.FileSystemLoader.prototype.getSource.call(this, name)
+    let fullpath = null
+    const paths = this.searchPaths
+
+    for (let i = 0; i < paths.length; i++) {
+      const p = path.resolve(paths[i], name)
+
+      if (fs.existsSync(p)) {
+        fullpath = p
+        break
+      }
     }
+
+    if (!fullpath) {
+      try {
+        fullpath = require.resolve(path.join(process.cwd(), 'node_modules', name))
+      } catch (err) {
+        return null
+      }
+    }
+
+    this.pathsToNames[fullpath] = name
 
     return {
       src: fs.readFileSync(fullpath, 'utf-8'),
