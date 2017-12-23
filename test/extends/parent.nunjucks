@@ -1,3 +1,6 @@
+---
+ignoreMe: I should be ignored
+---
 {% block header %}
 This is the default content
 {% endblock %}
