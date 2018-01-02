@@ -60,7 +60,6 @@ const NodeLoader = nunjucks.FileSystemLoader.extend({
       try {
         fullpath = require.resolve(path.join(process.cwd(), 'node_modules', name))
       } catch (err) {
-        return null
       }
     }
 
@@ -69,8 +68,11 @@ const NodeLoader = nunjucks.FileSystemLoader.extend({
       try {
         fullpath = require.resolve(path.join(process.cwd(), '..', '..', 'node_modules', name))
       } catch (err) {
-        return null
       }
+    }
+
+    if (!fullpath) {
+      return null;
     }
 
     this.pathsToNames[fullpath] = name
