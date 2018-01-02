@@ -29,6 +29,19 @@ function ignoreFrontMatter(file) {
   return file.replace(regex, '')
 }
 
+function isLernaProject() {
+  return fs.existsSync(
+    path.resolve(
+      path.join(
+        process.cwd(),
+        '..',
+        '..',
+        'lerna.json'
+      )
+    )
+  );
+}
+
 const NodeLoader = nunjucks.FileSystemLoader.extend({
   getSource(name) {
     let fullpath = null
@@ -46,6 +59,15 @@ const NodeLoader = nunjucks.FileSystemLoader.extend({
     if (!fullpath) {
       try {
         fullpath = require.resolve(path.join(process.cwd(), 'node_modules', name))
+      } catch (err) {
+        return null
+      }
+    }
+
+    // Lerna 
+    if (!fullpath && isLernaProject()) {
+      try {
+        fullpath = require.resolve(path.join(process.cwd(), '..', '..', 'node_modules', name))
       } catch (err) {
         return null
       }
