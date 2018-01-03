@@ -39,10 +39,14 @@ function isLernaProject() {
         'lerna.json'
       )
     )
-  );
+  )
 }
 
 const NodeLoader = nunjucks.FileSystemLoader.extend({
+  init(searchPaths, opts) {
+    this.reporter = opts ? opts.reporter : {}
+    nunjucks.FileSystemLoader.prototype.init.call(this, searchPaths, opts)
+  },
   getSource(name) {
     let fullpath = null
     const paths = this.searchPaths
@@ -59,20 +63,22 @@ const NodeLoader = nunjucks.FileSystemLoader.extend({
     if (!fullpath) {
       try {
         fullpath = require.resolve(path.join(process.cwd(), 'node_modules', name))
+        this.reporter[name] = fullpath
       } catch (err) {
       }
     }
 
-    // Lerna 
+    // Lerna
     if (!fullpath && isLernaProject()) {
       try {
         fullpath = require.resolve(path.join(process.cwd(), '..', '..', 'node_modules', name))
+        this.reporter[name] = fullpath
       } catch (err) {
       }
     }
 
     if (!fullpath) {
-      return null;
+      return null
     }
 
     this.pathsToNames[fullpath] = name
@@ -98,7 +104,7 @@ exports.compile = function (str, options) {
   }
 
   const loaders = [
-    new NodeLoader(paths),
+    new NodeLoader(paths, options),
     new nunjucks.FileSystemLoader(paths)
   ]
 
